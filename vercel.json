@@ -2,19 +2,19 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/notices.js",
+      "src": "backend/api/notices.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/testimonials.js", 
+      "src": "backend/api/testimonials.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/gallery.js",
+      "src": "backend/api/gallery.js",
       "use": "@vercel/node"
     },
     {
-      "src": "api/contact.js",
+      "src": "backend/api/contact.js",
       "use": "@vercel/node"
     }
   ],
@@ -24,7 +24,7 @@
       "dest": "/api/notices"
     },
     {
-      "src": "/api/testimonials", 
+      "src": "/api/testimonials",
       "dest": "/api/testimonials"
     },
     {
