@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/notices.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/testimonials.js", 
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/gallery.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/contact.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/notices",
+      "dest": "/api/notices"
+    },
+    {
+      "src": "/api/testimonials", 
+      "dest": "/api/testimonials"
+    },
+    {
+      "src": "/api/gallery",
+      "dest": "/api/gallery"
+    },
+    {
+      "src": "/api/contact",
+      "dest": "/api/contact"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "NODE_ENV": "production"
+  }
+}
