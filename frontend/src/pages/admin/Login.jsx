@@ -1,0 +1,83 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { authApi } from '@/services/apiService'
+
+export default function AdminLogin() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      const response = await authApi.login({ email, password })
+      if (response.data && response.data.token) {
+        Cookies.set('token', response.data.token)
+        navigate('/admin/dashboard')
+      } else {
+        setError('No token received from server')
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setError(err.response?.data?.message || err.message || 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="bg-primary/80 p-8 rounded-lg shadow-lg max-w-md w-full border border-primary/50">
+        <h1 className="text-3xl font-bold text-center mb-8 text-white">Admin Login</h1>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-900/50 text-red-200 rounded-lg border border-red-700">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-200">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-primary/50 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-secondary placeholder-gray-500"
+              placeholder="admin@company.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-200">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-primary/50 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-secondary placeholder-gray-500"
+              placeholder="••••••••"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-secondary text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors font-semibold"
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+
+        <p className="text-center text-gray-400 mt-6 text-sm">
+          Demo: admin@company.com / password123
+        </p>
+      </div>
+    </div>
+  )
+}
