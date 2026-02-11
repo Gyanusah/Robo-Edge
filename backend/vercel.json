@@ -2,37 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/auth.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/notices.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/gallery.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/testimonials.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/contact.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/(.*)",
+      "dest": "server.js"
     }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
-    "ADMIN_EMAIL": "@admin_email",
-    "ADMIN_PASSWORD": "@admin_password",
-    "NODE_ENV": "production"
-  }
+  ]
 }
