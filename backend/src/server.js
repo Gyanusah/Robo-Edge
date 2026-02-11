@@ -35,7 +35,7 @@ app.use('/testimonials', testimonialsRoutes)
 app.use('/contact', contactRoutes)
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/', (req, res) => {
   res.json({ status: 'Server is running' })
 })
 
