@@ -1,11 +1,23 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-// Use backend server for now (will change to serverless after deployment)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+// Dynamic API base URL for deployment
+const getApiBaseUrl = () => {
+  // Check if we're in browser
+  if (typeof window !== 'undefined') {
+    // For local development, use backend server
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+    }
+    // For production (Vercel), use serverless functions
+    return '/api'
+  }
+  // Fallback for SSR or other environments
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+}
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json'
   }
@@ -61,7 +73,9 @@ api.interceptors.response.use(
       if (isProtectedRequest) {
         console.log('Unauthorized - removing token and redirecting to login')
         Cookies.remove('token')
-        window.location.href = '/admin/login'
+        if (typeof window !== 'undefined') {
+          window.location.href = '/admin/login'
+        }
       }
     }
     return Promise.reject(error)
