@@ -1,10 +1,11 @@
 import { MongoClient, ObjectId } from 'mongodb'
+import jwt from 'jsonwebtoken'
 
 // MongoDB Atlas connection
 const uri = process.env.MONGODB_URI
-const options = { 
-  retryWrites: true, 
-  w: 'majority' 
+const options = {
+  retryWrites: true,
+  w: 'majority'
 }
 
 let cachedDb = null
@@ -13,7 +14,7 @@ async function connectToDatabase() {
   if (cachedDb) {
     return cachedDb
   }
-  
+
   try {
     const client = new MongoClient(uri, options)
     await client.connect()
@@ -22,6 +23,22 @@ async function connectToDatabase() {
   } catch (error) {
     console.error('Database connection error:', error)
     throw error
+  }
+}
+
+// Authentication middleware
+async function authenticate(req) {
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null
+  }
+
+  const token = authHeader.substring(7)
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    return decoded
+  } catch (error) {
+    return null
   }
 }
 
@@ -41,12 +58,19 @@ export default async function handler(req, res) {
 
     switch (req.method) {
       case 'GET':
+        // Public endpoint - no authentication required
         const notices = await collection.find({}).sort({ createdAt: -1 }).toArray()
         return res.status(200).json(notices)
 
       case 'POST':
+        // Protected endpoint - authentication required
+        const user = await authenticate(req)
+        if (!user) {
+          return res.status(401).json({ message: 'No token provided' })
+        }
+
         const { title, message, mediaItems } = req.body
-        
+
         if (!title) {
           return res.status(400).json({ message: 'Please provide a title' })
         }
@@ -63,9 +87,15 @@ export default async function handler(req, res) {
         return res.status(201).json({ ...newNotice, _id: result.insertedId })
 
       case 'PUT':
+        // Protected endpoint - authentication required
+        const putUser = await authenticate(req)
+        if (!putUser) {
+          return res.status(401).json({ message: 'No token provided' })
+        }
+
         const { id } = req.query
         const updateData = req.body
-        
+
         if (!id) {
           return res.status(400).json({ message: 'Please provide notice ID' })
         }
@@ -82,8 +112,14 @@ export default async function handler(req, res) {
         return res.status(200).json({ message: 'Notice updated successfully' })
 
       case 'DELETE':
+        // Protected endpoint - authentication required
+        const deleteUser = await authenticate(req)
+        if (!deleteUser) {
+          return res.status(401).json({ message: 'No token provided' })
+        }
+
         const { id: deleteId } = req.query
-        
+
         if (!deleteId) {
           return res.status(400).json({ message: 'Please provide notice ID' })
         }
@@ -97,8 +133,14 @@ export default async function handler(req, res) {
         return res.status(200).json({ message: 'Notice deleted successfully' })
 
       case 'PATCH':
+        // Protected endpoint - authentication required
+        const patchUser = await authenticate(req)
+        if (!patchUser) {
+          return res.status(401).json({ message: 'No token provided' })
+        }
+
         const { id: expireId } = req.query
-        
+
         if (!expireId) {
           return res.status(400).json({ message: 'Please provide notice ID' })
         }

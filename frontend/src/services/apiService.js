@@ -49,5 +49,13 @@ export const authApi = {
   logout: () => {
     api.post('/auth/logout')
     Cookies.remove('token')
+  },
+  // Admin management endpoints
+  createAdmin: (adminData) => {
+    console.log('Creating new admin:', adminData.email)
+    return api.post('/auth/create-admin', adminData)
+  },
+  getAllAdmins: () => {
+    return api.get('/auth/admins')
   }
 }

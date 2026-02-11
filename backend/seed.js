@@ -25,9 +25,9 @@ const seedDatabase = async () => {
       password: hashedPassword,
       role: 'admin'
     })
-
     console.log('Admin user created:', adminUser.email)
-    console.log('Credentials: admin@company.com / password123')
+
+    
 
     // Create a sample notice with media items for testing
     const sampleNotice = await Notice.create({
