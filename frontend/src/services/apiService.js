@@ -2,60 +2,60 @@ import api from './api'
 import Cookies from 'js-cookie'
 
 export const contactApi = {
-  sendMessage: (data) => api.post('/contact/send', data),
-  getMessages: () => api.get('/contact/messages')
+  sendMessage: (data) => api.post('/api/contact/send', data),
+  getMessages: () => api.get('/api/contact/messages')
 }
 
 export const galleryApi = {
-  getItems: () => api.get('/gallery'),
+  getItems: () => api.get('/api/gallery'),
   uploadItem: (formData) => {
     console.log('Uploading gallery item...')
-    return api.post('/gallery/upload', formData, {
+    return api.post('/api/gallery/upload', formData, {
       headers: { 'Content-Type': 'application/json' }
     })
   },
-  deleteItem: (id) => api.delete(`/gallery/${id}`),
-  updateItem: (id, data) => api.put(`/gallery/${id}`, data)
+  deleteItem: (id) => api.delete(`/api/gallery/${id}`),
+  updateItem: (id, data) => api.put(`/api/gallery/${id}`, data)
 }
 
 export const testimonialsApi = {
-  getTestimonials: () => api.get('/testimonials'),
+  getTestimonials: () => api.get('/api/testimonials'),
   createTestimonial: (data) => {
     console.log('Creating testimonial...')
-    return api.post('/testimonials', data)
+    return api.post('/api/testimonials', data)
   },
-  updateTestimonial: (id, data) => api.put(`/testimonials/${id}`, data),
-  deleteTestimonial: (id) => api.delete(`/testimonials/${id}`)
+  updateTestimonial: (id, data) => api.put(`/api/testimonials/${id}`, data),
+  deleteTestimonial: (id) => api.delete(`/api/testimonials/${id}`)
 }
 
 export const noticesApi = {
-  getNotices: () => api.get('/notices'),
+  getNotices: () => api.get('/api/notices'),
   createNotice: (data) => {
     console.log('Creating notice...')
-    return api.post('/notices', data)
+    return api.post('/api/notices', data)
   },
-  updateNotice: (id, data) => api.put(`/notices/${id}`, data),
-  deleteNotice: (id) => api.delete(`/notices/${id}`)
+  updateNotice: (id, data) => api.put(`/api/notices/${id}`, data),
+  deleteNotice: (id) => api.delete(`/api/notices/${id}`)
 }
 
 export const authApi = {
   login: (credentials) => {
     console.log('Logging in with:', credentials.email)
-    return api.post('/auth/login', credentials)
+    return api.post('/api/auth/login', credentials)
   },
   getMe: () => {
-    return api.get('/auth/me')
+    return api.get('/api/auth/me')
   },
   logout: () => {
-    api.post('/auth/logout')
+    api.post('/api/auth/logout')
     Cookies.remove('token')
   },
   // Admin management endpoints
   createAdmin: (adminData) => {
     console.log('Creating new admin:', adminData.email)
-    return api.post('/auth/create-admin', adminData)
+    return api.post('/api/auth/create-admin', adminData)
   },
   getAllAdmins: () => {
-    return api.get('/auth/admins')
+    return api.get('/api/auth/admins')
   }
 }
