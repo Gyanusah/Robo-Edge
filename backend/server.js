@@ -22,7 +22,12 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors(
+    {
+        origin: "https://robo-edge-kkgk.vercel.app/",
+        credentials: true
+    }
+));
 app.use(express.json()); // parse JSON request bodies
 app.use(helmet()); // security headers
 app.use(morgan("dev")); // logging
