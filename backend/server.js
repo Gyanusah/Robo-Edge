@@ -71,3 +71,4 @@ app.use(errorHandler);
 // };
 
 // startServer();
+export default app;
