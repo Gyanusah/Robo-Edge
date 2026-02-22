@@ -18,7 +18,7 @@ import applicationRoutes from "./routes/applicationRoutes.js";
 
 // Load environment variables
 dotenv.config();
-
+connectDB();
 const app = express();
 
 // Middlewares
@@ -70,5 +70,6 @@ app.use(errorHandler);
 //     }
 // };
 
-// startServer();
-export default app;
+ //startServer();
+
+ export default app;
